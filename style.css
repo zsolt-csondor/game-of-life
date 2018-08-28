@@ -8,3 +8,9 @@
   width: 8px;
   height: 8px;
 }
+#grid td.alive {
+  background-color: #ff0000;
+}
+#grid td.dead {
+  background-color: #ffffff;
+}
