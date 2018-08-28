@@ -11,9 +11,18 @@ function CreateGrid(width, height) {
   }
 }
 
+function ClearGrid() {
+  const gridTable = document.getElementById("grid");
+  const cells = gridTable.getElementsByTagName("td");
+
+  for(let i = 0; i < cells.length; i++) {
+    cells[i].classList.remove("alive");
+  }
+}
 //TODO: remove duplicates?
 //Populate the grid randomly with live cells at the start of the game
 function CreateRandomCells(width, height) {
+  ClearGrid();
   const numberOfCells = (width * height) / 10; //What would be a good initial cell number?
   const gridTable = document.getElementById("grid");
 
