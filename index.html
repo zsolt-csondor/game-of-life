@@ -1,14 +1,23 @@
 <!DOCTYPE html>
+<html>
 <head>
     <title>Conway's Game of Life</title>
 
+    <link rel="stylesheet" type="text/css" href="style.css">
+
     <script src="game.js"></script>
-    <link rel="stylesheet" type="text/css" src="style.css">
+
 </head>
 
 <body>
-  <div id="gamespace"> <!-- This is where the game is going to be "played" -->
-
+  <!-- This is where the game is going to be "played" -->
+  <div id="gamespace">
+    <table id="grid">
+    </table>
   </div>
+
+  <script>
+    CreateGrid(50,50);
+  </script>
 </body>
 </html>
