@@ -5,22 +5,25 @@
 
     <link rel="stylesheet" type="text/css" href="style.css">
 
-    <script src="game.js"></script>
-
 </head>
 
 <body>
   <input type="button" onClick="CreateRandomCells(50,50)" value="New Start Configuration"></input> <br/> <br/>
-  <input type="button" value="New Turn"></input>
+  <input type="button" value="New Turn" onClick="LivesOrDies()"></input> <br/><br/>
+  <input type="button" value="Start" onClick="Start()"></input>
   <!-- This is where the game is going to be "played" -->
   <div id="gamespace">
     <table id="grid">
     </table>
   </div>
 
+  <script src="game.js"></script>
   <script>
     CreateGrid(50,50);
-    //CreateRandomCells(50, 50);
+    function Start() {
+      LivesOrDies();
+      setTimeout(Start, 3000);
+    }
   </script>
 </body>
 </html>
