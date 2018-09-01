@@ -1,5 +1,5 @@
 //Global variables
-const listOfAliveCells = [];
+const listOfAliveCells = []; //Is this needed?
 const gridTable = document.getElementById("grid");
 
 //Create the grid where the game is played
@@ -46,25 +46,23 @@ function CreateRandomCells(width, height) {
 function LivesOrDies() {
 
   //Iterating through every cells in each row
-  for(let i = 1; i < gridTable.rows.length-1; i++) {
-    for(let j = 1; j < gridTable.rows[i].cells.length-1; j++) {
+  for(let i = 0; i < gridTable.rows.length; i++) {
+    for(let j = 0; j < gridTable.rows[i].cells.length; j++) {
       //First proceed with the rule checking based on the whether the current
       //cell is alive
       let currentCell = gridTable.rows[i].cells.item(j);
-      let leftNb = gridTable.rows[i].cells.item(j-1);
-      let rightNb = gridTable.rows[i].cells.item(j+1);
-      let topNb = gridTable.rows[i-1].cells.item(j);
-      let topLeftNb = gridTable.rows[i-1].cells.item(j-1);
-      let topRightNb = gridTable.rows[i-1].cells.item(j+1);
-      let bottomNb = gridTable.rows[i+1].cells.item(j);
-      let bottomLeftNb = gridTable.rows[i+1].cells.item(j-1);
-      let bottomRightNb = gridTable.rows[i+1].cells.item(j+1);
+      let leftNb = (typeof(gridTable.rows[i]) !== "undefined") ? gridTable.rows[i].cells.item(j-1) : null;
+      let rightNb = (typeof(gridTable.rows[i]) !== "undefined") ? gridTable.rows[i].cells.item(j+1) : null;
+      let topNb = (typeof(gridTable.rows[i-1]) !== "undefined") ? gridTable.rows[i-1].cells.item(j) : null;
+      let topLeftNb = (typeof(gridTable.rows[i-1]) !== "undefined") ? gridTable.rows[i-1].cells.item(j-1) : null;
+      let topRightNb = (typeof(gridTable.rows[i-1]) !== "undefined") ? gridTable.rows[i-1].cells.item(j+1) : null;
+      let bottomNb = (typeof(gridTable.rows[i+1]) !== "undefined") ? gridTable.rows[i+1].cells.item(j) : null;
+      let bottomLeftNb = (typeof(gridTable.rows[i+1]) !== "undefined") ? gridTable.rows[i+1].cells.item(j-1) : null;
+      let bottomRightNb = (typeof(gridTable.rows[i+1]) !== "undefined") ? gridTable.rows[i+1].cells.item(j+1) : null;
 
       let liveCounter = 0;
 
-      //TODO: No need to check neighbours at the boundaries
       //TODO: put the neighbours in a list and run a checking function on them
-      if(IsAlive(currentCell)) {
 
         if(IsAlive(leftNb)) {
           liveCounter++;
@@ -91,47 +89,18 @@ function LivesOrDies() {
           liveCounter++;
         }
 
-        if(liveCounter < 2 || liveCounter > 3) {
+        if(IsAlive(currentCell) && (liveCounter < 2 || liveCounter > 3)) {
           currentCell.classList.remove("alive");
         }
-      }
-      else {
-        //Check if dead cell comes to life
-        if(IsAlive(leftNb)) {
-          liveCounter++;
-        }
-        if(IsAlive(rightNb)) {
-          liveCounter++;
-        }
-        if(IsAlive(topNb)) {
-          liveCounter++;
-        }
-        if(IsAlive(topLeftNb)) {
-          liveCounter++;
-        }
-        if(IsAlive(topRightNb)) {
-          liveCounter++;
-        }
-        if(IsAlive(bottomNb)) {
-          liveCounter++;
-        }
-        if(IsAlive(bottomLeftNb)) {
-          liveCounter++;
-        }
-        if(IsAlive(bottomRightNb)) {
-          liveCounter++;
-        }
-
-        if(liveCounter === 3) {
+        else if(!IsAlive(currentCell) && liveCounter === 3) {
           currentCell.classList.add("alive");
         }
-      }
     }
   }
 }
 
 function IsAlive(cell) {
-  if(cell.classList.contains("alive") !== false) {
+  if(cell !== null && cell.classList.contains("alive") !== false) {
     return true;
   }
   else {
