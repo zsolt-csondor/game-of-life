@@ -13,6 +13,11 @@ function CreateGrid(width, height) {
       row.insertCell(j);
     }
   }
+
+  const cells = gridTable.getElementsByTagName("td");
+  for(let i = 0; i < cells.length; i++) {
+    cells[i].addEventListener("click", PaintCell);
+  }
 }
 
 function ClearGrid() {
@@ -25,7 +30,7 @@ function ClearGrid() {
 }
 
 //Populate the grid randomly with live cells at the start of the game
-function CreateRandomCells(numberOfCells) {
+function GenerateRandomCells(numberOfCells) {
   ClearGrid();
 
   const gridWidth = gridTable.rows[0].cells.length;
@@ -108,6 +113,16 @@ function IsAlive(cell) {
   }
   else {
     return false;
+  }
+}
+
+//If a cell is clicked on, make it alive. If already alive, make it dead.
+function PaintCell() {
+  if(this.classList.contains("alive")) {
+    this.classList.remove("alive");
+  }
+  else {
+    this.classList.add("alive");
   }
 }
 
