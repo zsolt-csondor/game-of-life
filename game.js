@@ -1,6 +1,7 @@
 //Global variables
 const listOfAliveCells = []; //Is this needed?
 const gridTable = document.getElementById("grid");
+let startOrStop = null; //Used by the Start and Stop functions for the Timeout
 
 //Create the grid where the game is played
 function CreateGrid(width, height) {
@@ -119,4 +120,13 @@ function ContainsSameCell(object, list) {
     }
   }
   return false;
+}
+
+//Starting and stopping the game
+function Start() {
+  LivesOrDies();
+  StartOrStop = setTimeout(Start, 1000);
+}
+function Stop() {
+  clearTimeout(StartOrStop);
 }
