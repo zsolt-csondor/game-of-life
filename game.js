@@ -25,14 +25,16 @@ function ClearGrid() {
 }
 
 //Populate the grid randomly with live cells at the start of the game
-function CreateRandomCells(width, height) {
+function CreateRandomCells(numberOfCells) {
   ClearGrid();
-  const numberOfCells = (width * height) / 12; //What would be a good initial cell number?
+
+  const gridWidth = gridTable.rows[0].cells.length;
+  const gridHeight = gridTable.rows.length
 
   for(let i = 0; i < numberOfCells; i++) {
     let randomPosition = {
-          row: Math.floor(Math.random() * (width)),
-          column: Math.floor(Math.random() * (height))
+          row: Math.floor(Math.random() * (gridHeight)),
+          column: Math.floor(Math.random() * (gridWidth))
         }
     //Dont't allow duplicate cells
     if(!ContainsSameCell(randomPosition, listOfAliveCells)) {
