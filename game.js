@@ -1,68 +1,83 @@
 //Globals
-const listOfAliveCells = []; //Every cell is stored here with a state (alive or dead) and is flushed before the start of a new round.
-const gridTable = document.getElementById("grid");
-let startOrStop = null; //Used by the Start and Stop functions for the Timeout
+const listOfProcessedCells = []; //Every cell is stored here with a state (alive or dead) and is flushed before the start of a new round.
 
-//Create the grid where the game is played
-function CreateGrid(width, height) {
+const Grid = {
+    gridTable: document.getElementById("grid"),
+    //Width and height are undefined before CreateGrid is called
+    width: function() {
+        if(this.gridTable.rows[0] === "undefined") {
+            return null;
+        }
+        else {
+            return this.gridTable.rows[0].cells.length;
+        }
+    },
+    height: function() {
+        if(this.gridTable.rows.length === 0) {
+            return null;
+        }
+        else {
+            return this.gridTable.rows.length;
+        }
+    },
+    //Create the grid where the game is played
+    CreateGrid: function CreateGrid(gridWidth, gridHeight) {
+            this.width = gridWidth;
+            this.height = gridHeight;
 
-    for (let i = 0; i < width; i++) {
-        let row = gridTable.insertRow(i);
+            for (let i = 0; i < gridWidth; i++) {
+                let row = this.gridTable.insertRow(i);
 
-        for (let j = 0; j < height; j++) {
-            row.insertCell(j);
+                for (let j = 0; j < gridHeight; j++) {
+                    row.insertCell(j);
+                }
+            }
+            const cells = this.gridTable.getElementsByTagName("td");
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].addEventListener("click", PaintCell);
+            }
+        },
+    ClearGrid: function ClearGrid() {
+        listOfProcessedCells.length = 0;
+        const cells = this.gridTable.getElementsByTagName("td");
+
+        for (let i = 0; i < cells.length; i++) {
+            cells[i].classList.remove("alive");
+        }
+    },
+    //Populate the grid randomly with live cells at the start of the game
+    GenerateRandomCells: function GenerateRandomCells(numberOfCells) {
+        this.ClearGrid();
+
+        for (let i = 0; i < numberOfCells; i++) {
+            let randomRow = Math.floor(Math.random() * (this.height));
+            let randomCol = Math.floor(Math.random() * (this.width));
+
+            let randomCell = this.gridTable.rows[randomRow].cells.item(randomCol);
+            randomCell.classList.add("alive");
         }
     }
+};
 
-    const cells = gridTable.getElementsByTagName("td");
-    for (let i = 0; i < cells.length; i++) {
-        cells[i].addEventListener("click", PaintCell);
-    }
-}
 
-function ClearGrid() {
-    listOfAliveCells.length = 0;
-    const cells = gridTable.getElementsByTagName("td");
-
-    for (let i = 0; i < cells.length; i++) {
-        cells[i].classList.remove("alive");
-    }
-}
-
-//Populate the grid randomly with live cells at the start of the game
-function GenerateRandomCells(numberOfCells) {
-    ClearGrid();
-
-    const gridWidth = gridTable.rows[0].cells.length;
-    const gridHeight = gridTable.rows.length;
-
-    for (let i = 0; i < numberOfCells; i++) {
-
-        let randomRow = Math.floor(Math.random() * (gridHeight));
-        let randomCol = Math.floor(Math.random() * (gridWidth));
-        let randomCell = gridTable.rows[randomRow].cells.item(randomCol);
-        randomCell.classList.add("alive");
-    }
-}
-
-//This is the core of the game. One function run corresponds to one round in the game. 
+//This is the core of the game. One function run corresponds to one round in the game.
 //The function goes through every cell in the grid and checks whether the given cell stays alive or
 //dies after the round, and then calls for the grid update.
 function LivesOrDies() {
     //Iterating through the grid horizontally
-    for (let i = 0; i < gridTable.rows.length; i++) {
-        for (let j = 0; j < gridTable.rows[i].cells.length; j++) {
+    for (let i = 0; i < Grid.height; i++) {
+        for (let j = 0; j < Grid.width; j++) {
 
-            //Identify the current cell and its neighbours           
-            let currentCell = gridTable.rows[i].cells.item(j);
-            let leftNb = (typeof (gridTable.rows[i]) !== "undefined") ? gridTable.rows[i].cells.item(j - 1) : null;
-            let rightNb = (typeof (gridTable.rows[i]) !== "undefined") ? gridTable.rows[i].cells.item(j + 1) : null;
-            let topNb = (typeof (gridTable.rows[i - 1]) !== "undefined") ? gridTable.rows[i - 1].cells.item(j) : null;
-            let topLeftNb = (typeof (gridTable.rows[i - 1]) !== "undefined") ? gridTable.rows[i - 1].cells.item(j - 1) : null;
-            let topRightNb = (typeof (gridTable.rows[i - 1]) !== "undefined") ? gridTable.rows[i - 1].cells.item(j + 1) : null;
-            let bottomNb = (typeof (gridTable.rows[i + 1]) !== "undefined") ? gridTable.rows[i + 1].cells.item(j) : null;
-            let bottomLeftNb = (typeof (gridTable.rows[i + 1]) !== "undefined") ? gridTable.rows[i + 1].cells.item(j - 1) : null;
-            let bottomRightNb = (typeof (gridTable.rows[i + 1]) !== "undefined") ? gridTable.rows[i + 1].cells.item(j + 1) : null;
+            //Identify the current cell and its neighbours
+            let currentCell = Grid.gridTable.rows[i].cells.item(j);
+            let leftNb = (typeof (Grid.gridTable.rows[i]) !== "undefined") ? Grid.gridTable.rows[i].cells.item(j - 1) : null;
+            let rightNb = (typeof (Grid.gridTable.rows[i]) !== "undefined") ? Grid.gridTable.rows[i].cells.item(j + 1) : null;
+            let topNb = (typeof (Grid.gridTable.rows[i - 1]) !== "undefined") ? Grid.gridTable.rows[i - 1].cells.item(j) : null;
+            let topLeftNb = (typeof (Grid.gridTable.rows[i - 1]) !== "undefined") ? Grid.gridTable.rows[i - 1].cells.item(j - 1) : null;
+            let topRightNb = (typeof (Grid.gridTable.rows[i - 1]) !== "undefined") ? Grid.gridTable.rows[i - 1].cells.item(j + 1) : null;
+            let bottomNb = (typeof (Grid.gridTable.rows[i + 1]) !== "undefined") ? Grid.gridTable.rows[i + 1].cells.item(j) : null;
+            let bottomLeftNb = (typeof (Grid.gridTable.rows[i + 1]) !== "undefined") ? Grid.gridTable.rows[i + 1].cells.item(j - 1) : null;
+            let bottomRightNb = (typeof (Grid.gridTable.rows[i + 1]) !== "undefined") ? Grid.gridTable.rows[i + 1].cells.item(j + 1) : null;
 
             let neighbourList = [leftNb, rightNb, topNb, topLeftNb, topRightNb, bottomNb, bottomLeftNb, bottomRightNb];
 
@@ -71,13 +86,13 @@ function LivesOrDies() {
             neighbourList.map(nb => {
                 if (IsAlive(nb)) {
                     liveCounter++;
-                }              
+                }
             });
 
             //If the current cell is alive but has less than 2 or more than 3 alive neighbours it dies in the next round
             if (IsAlive(currentCell) && (liveCounter < 2 || liveCounter > 3)) {
                 let deadCell = { row: i, column: j, staysAlive: false };
-                listOfAliveCells.push(deadCell);
+                listOfProcessedCells.push(deadCell);
             }
             //If the current cell is alive and has the right number of neighbours it stays alive in the next round
             else if (IsAlive(currentCell) && (liveCounter === 2 || liveCounter === 3)) {
@@ -86,26 +101,26 @@ function LivesOrDies() {
             //If the current cell is dead, but has exactly 3 neighbours alive it becomes alive in the next round
             else if (!IsAlive(currentCell) && liveCounter === 3) {
                 let liveCell = { row: i, column: j, staysAlive: true };
-                listOfAliveCells.push(liveCell);
+                listOfProcessedCells.push(liveCell);
             }
             //Otherwise if the current cell is dead ir stays dead in the next round
             else if (!IsAlive(currentCell)) {
                 let deadCell = { row: i, column: j, staysAlive: false };
-                listOfAliveCells.push(deadCell);
+                listOfProcessedCells.push(deadCell);
             }
         }
     }
 
-    UpdateGridStates(listOfAliveCells);
+    UpdateGridStates(listOfProcessedCells);
 }
 
-function UpdateGridStates(listOfAliveCells) {
+function UpdateGridStates(listOfProcessedCells) {
 
-    for (let i = 0; i < listOfAliveCells.length; i++) {
+    for (let i = 0; i < listOfProcessedCells.length; i++) {
 
-        let currentCell = gridTable.rows[listOfAliveCells[i].row].cells.item(listOfAliveCells[i].column);
+        let currentCell = Grid.gridTable.rows[listOfProcessedCells[i].row].cells.item(listOfProcessedCells[i].column);
 
-        if (listOfAliveCells[i].staysAlive === true) {
+        if (listOfProcessedCells[i].staysAlive === true) {
             if (!currentCell.classList.contains("alive")) {
                 currentCell.classList.add("alive");
             }
@@ -115,7 +130,7 @@ function UpdateGridStates(listOfAliveCells) {
         }
     }
     //Clear the list of cells for the next round
-    listOfAliveCells.length = 0;
+    listOfProcessedCells.length = 0;
 }
 
 function IsAlive(cell) {
@@ -150,11 +165,14 @@ function ContainsSameCell(object, list) {
     return false;
 }
 
-//Starting and stopping the game
-function Start() {
-    LivesOrDies();
-    StartOrStop = setTimeout(Start, 300);
-}
-function Stop() {
-    clearTimeout(StartOrStop);
-}
+const Controls = {
+    StartOrStop: null,
+
+    Start: function Start() {
+        LivesOrDies();
+        StartOrStop = setTimeout(Start, 300);
+    },
+    Stop: function Stop() {
+        clearTimeout(StartOrStop);
+    }
+};

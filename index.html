@@ -8,10 +8,12 @@
 </head>
 
 <body>
-  <input type="button" onClick="GenerateRandomCells(500)" value="New Start Configuration"></input> <br/> <br/>
+  <input type="button" onClick="Grid.GenerateRandomCells(500)" value="New Random Configuration"></input> <br/> <br/>
   <input type="button" value="New Turn" onClick="LivesOrDies()"></input> <br/><br/>
-  <input type="button" value="Start" onClick="Start()"></input> <br/><br/>
-  <input type="button" value="Stop" onClick="Stop()"></input> <br/><br/>
+  <input type="button" value="Start" onClick="Controls.Start()"></input> <br/><br/>
+  <input type="button" value="Stop" onClick="Controls.Stop()"></input> <br/><br/>
+  <input type="button" value="Clear" onClick="Grid.ClearGrid();"</input> <br/><br/>
+
   <!-- This is where the game is going to be "played" -->
   <div id="gamespace">
     <table id="grid">
@@ -20,7 +22,7 @@
 
   <script src="game.js"></script>
   <script>
-    CreateGrid(50,50);
+    Grid.CreateGrid(50,50);
 
   </script>
 </body>
